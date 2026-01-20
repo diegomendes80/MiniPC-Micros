@@ -5,9 +5,20 @@ U8G2_SH1106_128X64_NONAME_1_HW_I2C u8g2(U8G2_R0, /* reset=*/ U8X8_PIN_NONE);
 
 #define PIN_TECLADO PA0
 #define SIZE 4
-#define MAX_SNAKE 30 // Reduzi mais 5 segmentos para garantir a compilação
+#define MAX_SNAKE 30 
 
-int sX[MAX_SNAKE], sY[MAX_SNAKE], tam, dX, dY, mX, mY, score, posMenu = 0;
+*/
+void st(uint8_t d);
+void waitFlash();
+void writeStr(uint32_t adr, const char* s);
+void wait();
+void writeInt(uint32_t adr, int32_t v);
+
+
+
+// MUDANÇA CRÍTICA: int8_t economiza 180 bytes de Flash/RAM
+int8_t sX[MAX_SNAKE], sY[MAX_SNAKE]; 
+int tam, dX, dY, mX, mY, score;
 bool vivo = true;
 unsigned long lastT = 0;
 
@@ -18,7 +29,10 @@ void novaMaca() {
 
 void reset() {
   tam = 3; score = 0; dX = 1; dY = 0; vivo = true;
-  for(int i = 0; i < tam; i++) { sX[i] = 60 - (i * SIZE); sY[i] = 32; }
+  for(int i = 0; i < tam; i++) { 
+    sX[i] = 60 - (i * SIZE); 
+    sY[i] = 32; 
+  }
   novaMaca();
 }
 
@@ -45,10 +59,6 @@ void loop() {
       if (sX[0] == mX && sY[0] == mY) { if (tam < MAX_SNAKE) tam++; score += 10; novaMaca(); }
       lastT = millis();
     }
-  } else {
-    if (adc < 80) posMenu = 0;
-    else if (adc >= 430 && adc < 600) posMenu = 1;
-    if (adc >= 700 && adc < 950 && posMenu == 0) reset();
   }
 
   u8g2.firstPage();
@@ -57,26 +67,23 @@ void loop() {
     u8g2.setDrawColor(1);
     if (vivo) {
       for (int x = 0; x < 128; x += 16) for (int y = 8; y < 64; y += 16) u8g2.drawPixel(x, y);
-      char buf[5]; itoa(score, buf, 10);
-      u8g2.drawStr(2, 6, "SC:"); u8g2.drawStr(18, 6, buf);
+      u8g2.setCursor(2, 6); u8g2.print(F("SC:")); // Macro F() economiza Flash
+      u8g2.setCursor(18, 6); u8g2.print(score);
       u8g2.drawHLine(0, 7, 128); 
       u8g2.drawFrame(mX, mY, SIZE, SIZE);
       for (int i = 0; i < tam; i++) u8g2.drawBox(sX[i], sY[i], SIZE, SIZE);
     } else {
-      u8g2.drawFrame(38, 15, 52, 12); u8g2.drawStr(44, 24, "GAME OVER");
+
+      writeInt(900, score);
       
-      // Desenho simplificado dos botões
-      if (posMenu == 0) u8g2.drawBox(0, 48, 45, 10);
-      else u8g2.drawBox(104, 48, 22, 10);
+      u8g2.drawFrame(38, 15, 52, 12); 
+      u8g2.setCursor(44, 25); u8g2.print(F("GAME OVER"));
       
-      u8g2.setDrawColor(0);
-      u8g2.drawStr(2, 55, "REINICIAR");
-      u8g2.drawStr(106, 55, "MENU");
-      u8g2.setDrawColor(1);
-      
-      // Escreve o texto não selecionado por cima em branco
-      if (posMenu == 1) u8g2.drawStr(2, 55, "REINICIAR");
-      else u8g2.drawStr(106, 55, "MENU");
+      u8g2.setCursor(0, 40); u8g2.print(F("Recorde:"));
+      int highScore = 1000;
+      u8g2.setCursor(55, 40); u8g2.print(highScore);
+
+      if (adc >= 700 && adc < 950 ) reset();
     }
   } while (u8g2.nextPage());
 }
