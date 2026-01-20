@@ -1,7 +1,7 @@
 #include <SPI.h>
 
 // Pino de Seleção do Chip (CS)
-const int CH376_CS = 10;
+const int CH376_CS = 12;
 
 void setup() {
   Serial.begin(9600);
@@ -43,6 +43,7 @@ void loop() {
 
   if (resposta == 0xAA) {
     Serial.println("[SUCESSO] O modulo esta VIVO e respondendo!");
+    digitalWrite(PC13, HIGH);
   } else if (resposta == 0xFF) {
     Serial.println("[ERRO] Resposta 0xFF: Verifique a fiacao do MISO/SDO.");
   } else if (resposta == 0x00) {
