@@ -20,7 +20,7 @@ uint32_t lastT = 0;                          // Padrão para millis()
 bool vivo = true, recordeSalvo = false;
 
 // Buffers na Flash Externa
-char tMorte[15], tScore[15], tHigh[15];
+char tMorte[15], tScore[15], tHigh[15], tReiniciar[15];
 
 SPISettings flashSettings(500000, MSBFIRST, SPI_MODE0);
 
@@ -92,10 +92,11 @@ void setup() {
   SPI.begin();
   delay(300);
 
-  // Validação simples
-  rdStr(100, tMorte, 6); // Reutiliza tMorte para teste inicial
-  if (tMorte[0] == 'S') digitalWrite(LED_PIN, LOW); 
+  // // Validação simples
+  // rdStr(100, tMorte, 6); // Reutiliza tMorte para teste inicial
+  // // if (tMorte[0] == 'S') digitalWrite(LED_PIN, LOW); 
 
+  rdStr(100, tReiniciar, 10); 
   rdStr(200, tMorte, 12); 
   rdStr(300, tScore, 10); 
   rdStr(400, tHigh, 10);  
@@ -152,7 +153,7 @@ void loop() {
       u8g2.drawStr(20, 40, tHigh); 
       u8g2.setCursor(70, 40); u8g2.print(high);
       u8g2.drawBox(0, 52, 55, 10);
-      u8g2.setDrawColor(0); u8g2.drawStr(2, 60, "REINICIAR");
+      u8g2.setDrawColor(0); u8g2.drawStr(2, 60, tReiniciar);
       u8g2.setDrawColor(1);
     }
   } while (u8g2.nextPage());

@@ -38,7 +38,7 @@ void setup() {
   wait();
 
   // GRAVANDO ASSETS
-  writeStr(100, "SNAKE VOLT"); // Nome do Jogo
+  writeStr(100, "REINICIAR"); // Nome do Jogo
   writeStr(200, "GAME OVER");  // Tela de morte
   writeStr(300, "PONTOS:");    // Placar
   writeStr(400, "RECORDE:");   // Recorde
