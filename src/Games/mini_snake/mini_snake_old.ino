@@ -7,7 +7,7 @@ U8G2_SH1106_128X64_NONAME_1_HW_I2C u8g2(U8G2_R0, /* reset=*/ U8X8_PIN_NONE);
 #define SIZE 4
 #define MAX_SNAKE 30 
 
-*/
+
 void st(uint8_t d);
 void waitFlash();
 void writeStr(uint32_t adr, const char* s);

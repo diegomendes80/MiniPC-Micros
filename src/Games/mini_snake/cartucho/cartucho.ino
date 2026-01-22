@@ -15,6 +15,8 @@ void wait() {
   digitalWrite(CS_PIN, HIGH);
 }
 
+
+
 void writeStr(uint32_t adr, const char* s) {
   digitalWrite(CS_PIN, LOW); st(0x06); digitalWrite(CS_PIN, HIGH);
   digitalWrite(CS_PIN, LOW);
@@ -40,6 +42,7 @@ void setup() {
   writeStr(200, "GAME OVER");  // Tela de morte
   writeStr(300, "PONTOS:");    // Placar
   writeStr(400, "RECORDE:");   // Recorde
+
   
   // Gravando um "Mapa" (Bytes que definem bordas ou obstáculos)
   // Exemplo: Endereço 500 guarda se o nível tem borda (1) ou não (0)
